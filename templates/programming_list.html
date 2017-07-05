@@ -1,0 +1,49 @@
+{% extends "index.html" %} {% block content %}
+
+<style>
+    img {
+        width: 175px;
+        height: 175px;
+    }
+
+    .page-load-status {
+        display: none;
+        padding-top: 20px;
+        border-top: 1px solid #DDD;
+        text-align: center;
+        color: #777;
+    }
+</style>
+
+<ul class="list-unstyled" style="padding: 16px;">
+    <p style="margin: auto; text-align:center;">Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</p>
+    {% for programming in object_list %}
+    <li class="media bg-success text-white" style="margin-top: 8px;">
+        <img class="d-flex mr-3" src="/media/{{programming.photo}}" alt="Generic placeholder image">
+        <div class="media-body" style="padding:8px;">
+            <h5>{{programming.name}}</h5>
+            <p>Year : {{programming.year}}</p>
+            <p>Creator : <b>{{programming.creator}}</b></p>
+            <p>Framework : {% for framework in programming.frameworks.all %}
+                <label for="" class="label-primary">{{framework.name}},</label> {% endfor %}</p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% if page_obj.has_next %}
+<a id="pagination" class="btn btn-outline-success pull-right" href="?page={{page_obj.next_page_number}}" style="margin-top: 8px; display: none;">More</a>{%endif%}
+{% block js %}
+
+<script>
+    $(document).ready(function () {
+        var elem = document.querySelector('.container');
+        var infScroll = new InfiniteScroll(elem, {
+            // options
+            path: '#pagination',
+            append: '.list-unstyled',
+            history: true,
+        });
+    });
+</script>
+
+{% endblock js %} {% endblock content %}
